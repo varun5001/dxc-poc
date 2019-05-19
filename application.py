@@ -3,6 +3,8 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from sqlalchemy import create_engine
 from json import dumps
+import sqlalchemy
+import sqlite3
 
 db_connect = create_engine('sqlite:///chinook.db')
 app = Flask(__name__)
@@ -59,29 +61,41 @@ class Employees_Name(Resource):
 
 @app.route('/post_test', methods=['POST'])
 def post_test():
-        conn = db_connect.connect()
-        print(request.json)
-        LastName = request.json['LastName']
-        FirstName = request.json['FirstName']
-        Title = request.json['Title']
-        ReportsTo = request.json['ReportsTo']
-        BirthDate = request.json['BirthDate']
-        HireDate = request.json['HireDate']
-        Address = request.json['Address']
-        City = request.json['City']
-        State = request.json['State']
-        Country = request.json['Country']
-        PostalCode = request.json['PostalCode']
-        Phone = request.json['Phone']
-        Fax = request.json['Fax']
-        Email = request.json['Email']
-        query = conn.execute("insert into employees values(null,'{0}','{1}','{2}','{3}', \
-                             '{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}', \
-                             '{13}')".format(LastName,FirstName,Title,
-                             ReportsTo, BirthDate, HireDate, Address,
-                             City, State, Country, PostalCode, Phone, Fax,
-                             Email))
-        return "{'status':'success'}"
+    
+        try:
+            status = 'Failed'
+            conn = db_connect.connect()
+            print(request.json)
+            LastName = request.json['LastName']
+            FirstName = request.json['FirstName']
+            Title = request.json['Title']
+            ReportsTo = request.json['ReportsTo']
+            BirthDate = request.json['BirthDate']
+            HireDate = request.json['HireDate']
+            Address = request.json['Address']
+            City = request.json['City']
+            State = request.json['State']
+            Country = request.json['Country']
+            PostalCode = request.json['PostalCode']
+            Phone = request.json['Phone']
+            Fax = request.json['Fax']
+            Email = request.json['Email']
+            query = conn.execute("insert into employees values(null,'{0}','{1}','{2}','{3}', \
+                                '{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}', \
+                                '{13}')".format(LastName,FirstName,Title,
+                                ReportsTo, BirthDate, HireDate, Address,
+                                City, State, Country, PostalCode, Phone, Fax,
+                                Email))
+            status = 'success'
+        except sqlalchemy.exc.OperationalError:
+            print('db locked')
+            status = 'Failed because db locked'
+        except sqlite3.ProgrammingError:
+            print('sqlite programming error')
+        except exception as e:
+            print(e)
+        
+        return "{'status':"+status+"'}"
 @app.route('/get_test', methods=['GET'])
 def get_test():
     print('In get.....')
