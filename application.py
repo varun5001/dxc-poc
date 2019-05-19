@@ -64,7 +64,7 @@ def post_test():
     
         try:
             status = 'Failed'
-            conn = db_connect.connect()
+            #conn = db_connect.connect()
             print(request.json)
             LastName = request.json['LastName']
             FirstName = request.json['FirstName']
@@ -80,12 +80,14 @@ def post_test():
             Phone = request.json['Phone']
             Fax = request.json['Fax']
             Email = request.json['Email']
+            '''
             query = conn.execute("insert into employees values(null,'{0}','{1}','{2}','{3}', \
                                 '{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}', \
                                 '{13}')".format(LastName,FirstName,Title,
                                 ReportsTo, BirthDate, HireDate, Address,
                                 City, State, Country, PostalCode, Phone, Fax,
                                 Email))
+            '''
             status = 'success'
         except sqlalchemy.exc.OperationalError:
             print('db locked')
