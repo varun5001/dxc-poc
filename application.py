@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from json import dumps
 import sqlalchemy
 import sqlite3
+from joblib import dump, load
 
 db_connect = create_engine('sqlite:///chinook.db')
 app = Flask(__name__)
@@ -103,13 +104,36 @@ def post_test():
 def get_test():
     print('In get.....')
     conn = db_connect.connect() # connect to database
-    query = conn.execute("select * from employees") # This line performs query and returns json result
+    #query = conn.execute("select * from employees") # This line performs query and returns json result
     #return {'employees': [i[0] for i in query.cursor.fetchall()]} # Fetches first column that is Employee ID
     return 'Hello'
+
+@app.route('/get_topics', methods=['GET'])
+def get_topics():
+    tweet = request.args.get('tweet')
+    vectorizer = load('tf_vectorizer.joblib') 
+    model = load('nmf.joblib')
+    #text = "My friend suffering from #lungcancer #lcsm need support from you all. We are also planning to setup #lungcancerawareness meetings in our neighbourhood"
+    text = tweet
+    nmf_topics = model.transform(vectorizer.transform([text]))[0]
+    topic_idx = 0
+    json_res = {}
+    nmf_map = {'Topic 0':'Lung Cancer',
+          'Topic 1':'Breast Cancer and Women',
+          'Topic 2':'Diabetes and heart realted',
+          'Topic 3':'Early Stage Lung Cancer',
+          'Topic 4':'Epilepsy and Seizures',
+          'Topic 5':'Heart Stroke'}
+    for topic in nmf_map:
+        print(topic+' '+nmf_map[topic]+' '+str(nmf_topics[topic_idx]))
+        json_res[nmf_map[topic]] = nmf_topics[topic_idx]
+        topic_idx+=1
+    return str(json_res)
 
 api.add_resource(Employees, '/employees') # Route_1
 api.add_resource(Tracks, '/tracks') # Route_2
 api.add_resource(Employees_Name, '/employees/<employee_id>') # Route_3
+
 
 
 if __name__ == '__main__':
