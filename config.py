@@ -1,0 +1,8 @@
+import os
+
+ACCOUNT_NAME = os.environ["ACCOUNT_NAME"]
+ACCOUNT_KEY = os.environ["ACCOUNT_KEY"]
+CONTAINER_NAME = os.environ["CONCONTAINER_NAME"]
+CONSUMER_KEY = os.environ["CONSUMER_KEY"]
+CONSUMER_SECRET = os.environ["CONSUMER_SECRET"]
+

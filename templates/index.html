@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun May 19 16:26:01 2019
+
+@author: vsriram7
+"""
+
+{% block body %}
+<h2>Flask Login App</h2>
+{% if session['screen_name'] %}
+Hello {{ session['screen_name']}}!
+{% else %}
+
+Sign in with twitter.
+
+<a href="{{ url_for('login') }}">hrlllo</a>
+{% endif %}
+{% endblock %}

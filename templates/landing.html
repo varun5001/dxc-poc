@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Clinical Trails</title>
+</head>
+
+<body style="background-color:black;color:white;font-family: Segoe UI Light;">
+    <center>
+        <h1>
+            {% if session['screen_name'] %} Welcome, <u> {{ session['screen_name']}}!</u>
+        </h1>
+
+        <h3>Here are some actively recruiting studies that you may be able to participate (Based on your tweet). Looking for more personalized studies? <a href="javascript:personal_trails_form()">Click Here</a> </h3>
+        <div id="personal_trails_form" style="display:None;">
+            &nbsp; &nbsp;
+            <center>
+                <form method="POST" action="{{ url_for('get_personal_trails') }}" target="_blank">
+                    How old are you ? : <input name="age"> <br /> Gender :
+                    <select name="gender">
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+          </select><br /> Intervention: <input name="intervention"> <br /> Country:
+                    <select name="country">
+            <option value="US">USA</option>
+            <option value="India">India</option>
+          </select>
+                    <br />
+
+                    <input type="submit" value="Get Trails">
+                </form>
+            </center>
+        </div>
+
+        <ul align="left">
+            <br /><br /><br /> {% for key, value in map_trails.items() %}
+            
+                
+                <li> <a href={{ value }} target="_blank" style="color:white"> {{key}}</a> </li>
+            
+
+            {% endfor %}
+        </ul>
+    </center>
+    {% endif %}
+
+</body>
+
+</html>
+
+<script>
+    function personal_trails_form() {
+        var x = document.getElementById("personal_trails_form");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>

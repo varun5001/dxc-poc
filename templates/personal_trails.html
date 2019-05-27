@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Personalized Trails</title>
+</head>
+
+<body style="background-color:black;color:white;font-family: Segoe UI Light;">
+    <center>
+        <h1>
+            {% if session['screen_name'] %} Welcome, <u> {{ session['screen_name']}}!</u>
+        </h1>
+
+        <h3>Personalized Trails based on your information </h3>
+        <ul align="left">
+
+            {% for key, value in map_trails.items() %}
+            
+                
+                <li> <a href={{ value }} target="_blank" style="color:white"> {{key}}</a> </li>
+           
+
+            {% endfor %}
+        </ul>
+        {% else %} Sign in with twitter.
+
+        <a href="{{ url_for('login') }}">Darn!!!! you got us. Sign in with twitter.</a>
+    </center>
+    {% endif %}
+
+</body>
+
+</html>
